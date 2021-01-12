@@ -1,3 +1,11 @@
+/*!
+ * \file main.cpp
+ *
+ * \author YunLink777
+ * \date 2021/1/12
+ *
+ * \description:Callable Objects 可调用对象
+ */
 #include <iostream>
 #include <functional>
 #include <string>
