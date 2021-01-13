@@ -41,6 +41,24 @@ bool OlderThan(const Person& p1, const Person& p2)
 	return p1.GetAge() > p2.GetAge();
 }
 
+//overload () to make Older object a callable object
+class Older
+{
+public:
+	bool operator() (const Person& a, const Person& b)
+	{
+		return a.GetAge() > b.GetAge();
+	}
+};
+
+struct Older_Struct
+{
+	bool operator() (const Person& a, const Person& b)
+	{
+		return a.GetAge() > b.GetAge();
+	}
+};
+
 int main()
 {
 	Person p("ÕÅÈı", 22, "Å®");
@@ -100,24 +118,50 @@ int main()
 
 	for (auto tempP : persons1)
 	{
-		cout << "persons: " << tempP.GetName() << " age: "<< tempP.GetAge() << endl;
+		cout << "mem_fn   persons: " << tempP.GetName() << " age: "<< tempP.GetAge() << endl;
 	}
 
 	cout << endl << endl;
 
 	for (auto tempP : persons2)
 	{
-		cout << "persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
+		cout << "bind   persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
 	}
 
 	cout << endl << endl;
 
 	for (auto tempP : persons3)
 	{
-		cout << "persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
+		cout << "function   persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
 	}
 
 	cout << endl << endl;
+
+	//lambda
+	vector<Person> persons4{ p, p1, p2, p3, p4 };
+	sort(persons4.begin(), persons4.end(), [](const Person& a, const Person& b)
+		{
+			return a.GetAge() > b.GetAge();
+		});
+
+	for (auto tempP : persons4)
+	{
+		cout << "lambda   persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
+	}
+
+	//lambda  p and p2 are passed as ref
+	auto b = [&p, &p2]() { return p.GetAge() > p2.GetAge(); };
+	cout << "lambda   OlderThan: " << b() << endl;
+
+	cout << endl << endl;
+
+	//a callable object with overload ()
+	Older older;
+	function<bool(const Person&, const Person&)> older_fun_class = Older();
+	function<bool(const Person&, const Person&)> older_fun_struct = Older_Struct();
+	cout << "class overload (): " << older(p, p4) << endl;
+	cout << "class overload (): " << older_fun_class(p, p4) << endl;
+	cout << "struct overload (): " << older_fun_struct(p, p4) << endl;
 	
 	getchar();
 	return 0;

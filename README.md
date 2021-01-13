@@ -4,9 +4,9 @@ C++ practice demos，every folder contains a main.cpp, which can be complied and
 
 # -------------------------
 # 可调用对象:
-函数指针、成员函数指针、成员指针、bind、function、mem_fn
+函数指针、成员函数指针、成员指针、bind、function、mem_fn、lambda、重载()的类
 
 # Callable Objects:
-function pointer, member pointer, member function pointer, std::bind、function、mem_fn
+function pointer, member pointer, member function pointer, std::bind、function、mem_fn、lambda、class overload()
 
 # -------------------------
