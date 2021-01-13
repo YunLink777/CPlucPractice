@@ -149,9 +149,11 @@ int main()
 		cout << "lambda   persons: " << tempP.GetName() << " age: " << tempP.GetAge() << endl;
 	}
 
-	//lambda  p and p2 are passed as ref
-	auto b = [&p, &p2]() { return p.GetAge() > p2.GetAge(); };
-	cout << "lambda   OlderThan: " << b() << endl;
+	//lambda  p and p2 are passed as ref, and the lambda expression is caught by function or auto
+	function<bool()> older_fun_lambda = [&p, &p2]() { return p.GetAge() > p2.GetAge(); };
+	auto fun_auto = [&p, &p2]() { return p.GetAge() > p2.GetAge(); };
+	cout << "function lambda   OlderThan: " << older_fun_lambda() << endl;
+	cout << "auto lambda   OlderThan: " << fun_auto() << endl;
 
 	cout << endl << endl;
 
