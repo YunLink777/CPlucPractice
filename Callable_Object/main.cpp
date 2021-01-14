@@ -13,6 +13,9 @@
 #include <vector>
 
 using namespace std;
+typedef void(*Say_CallBack)(const string&, const string&);	//define a callback with function pointer
+typedef function<void(const string&, const string&)> Say_Function;	//define a function
+typedef function<void(const string&)> Say_Hi_Function;	//define a function
 
 class Person
 {
@@ -27,6 +30,40 @@ public:
 	}
 	string xb;
 
+	//use two way to achieve callback
+	void SetSayFun1(Say_CallBack say_callback)
+	{
+		say_fun1 = say_callback;
+	}
+
+	void SetSayFun2(Say_Function say_function)
+	{
+		say_fun2 = say_function;
+	}
+
+	void SetSayHiFun(Say_Hi_Function say_hi_function)
+	{
+		say_hi_fun = say_hi_function;
+	}
+
+	void Say1(const string& word)
+	{
+		if (say_fun1)
+			say_fun1(word, GetName());
+	}
+
+	void Say2(const string& word)
+	{
+		if (say_fun2)
+			say_fun2(word, GetName());
+	}
+
+	void SayHi()
+	{
+		if (say_hi_fun)
+			say_hi_fun(GetName());
+	}
+
 	static string Person::* NameData()
 	{
 		return &Person::name;
@@ -34,11 +71,19 @@ public:
 private:
 	int age;
 	string name;
+	Say_CallBack say_fun1 = nullptr;
+	Say_Function say_fun2 = nullptr;
+	Say_Hi_Function say_hi_fun = nullptr;
 };
 
 bool OlderThan(const Person& p1, const Person& p2)
 {
 	return p1.GetAge() > p2.GetAge();
+}
+
+void Say_Fun(const string& word, const string& who)
+{
+	cout << who << " is saying: " << word << endl;
 }
 
 //overload () to make Older object a callable object
@@ -164,6 +209,19 @@ int main()
 	cout << "class overload (): " << older(p, p4) << endl;
 	cout << "class overload (): " << older_fun_class(p, p4) << endl;
 	cout << "struct overload (): " << older_fun_struct(p, p4) << endl;
+
+	//--------------------------------------------
+	//use three way to achieve callback
+	p.SetSayFun1(Say_Fun);		//function pointer
+	p.SetSayFun2(Say_Fun);		//std::function
+	p.SetSayHiFun(bind(Say_Fun, "Hi!", placeholders::_1));	//std::bind, can adapter current function to achieve new function
+	p.Say1("Hello!");
+	p.Say2("I love you!");
+	p.SayHi();
+
+	//bind can change the parameters' order
+	p.SetSayFun2(bind(Say_Fun, placeholders::_2, placeholders::_1));
+	p.Say2("Hello!");
 	
 	getchar();
 	return 0;
