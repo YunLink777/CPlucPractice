@@ -30,6 +30,7 @@ public:
 	}
 	string xb;
 
+	//------------------------------------------------------------------------
 	//use two way to achieve callback
 	void SetSayFun1(Say_CallBack say_callback)
 	{
@@ -62,6 +63,31 @@ public:
 	{
 		if (say_hi_fun)
 			say_hi_fun(GetName());
+	}
+
+	//------------------------------------------------------------------------
+	//Get function pointer as callable object
+	Say_CallBack GetSayFun1()
+	{
+		return say_fun1;
+	}
+
+	//Get std::function as callable object
+	Say_Function GetSayFun2()
+	{
+		return say_fun2;
+	}
+
+	//Get function pointer as callable object, but use function pointer type as the return value, you can treat GetSayFun1_1() as a function pointer name
+	void (*GetSayFun1_1())(const string&, const string&)
+	{
+		return say_fun1;
+	}
+
+	//Get function pointer as callable object, but use function pointer type as the return value, -> means return value type
+	auto GetSayFun1_2() -> void(*)(const string&, const string&)
+	{
+		return say_fun1;
 	}
 
 	static string Person::* NameData()
@@ -109,8 +135,10 @@ int main()
 	Person p("张三", 22, "女");
 
 	string Person::* ptr = &Person::xb;	//mem pointer
+	string* ptrXb = &p.xb;	//a normal pointer point to a exist object's member
 	cout << "成员指针1: " << p.*ptr << endl;
 	cout << "成员指针2: " << &p->*ptr << endl;
+	cout << "指向某个对象成员的普通指针: " << *ptrXb << endl;
 
 	string Person::* ptr_static = Person::NameData();
 	cout << "静态成员指针：" << p.*ptr_static << endl;
@@ -123,6 +151,11 @@ int main()
 	cout << "成员函数指针1：" << (p.*fun_pointer1)() << endl;	//the () is necessary
 	cout << "成员函数指针2：" << (p.*fun_pointer2)() << endl;
 	cout << "成员函数指针3：" << (p.*fun_pointer3)() << endl;
+
+	//------------------------------------------------------------------------
+	//But member function pointer is not a callable object, it cannot be called by.* or ->*, and it cannot be passed to an algorithm interface
+	//So we can use std::function、std::bind、std::mem_fn to encapsulate a member function pointer to a callable object
+	//------------------------------------------------------------------------
 
 	//function create a callable object, point to member function pointer, the first parameter is the object, it can be a ref or a pointer
 	function<int(Person*)> fun1 = &Person::GetAge;	
@@ -141,6 +174,8 @@ int main()
 	auto fun5 = bind(&Person::OlderThanAge, std::placeholders::_1, std::placeholders::_2);
 	cout << "bind 成员函数指针5：" << fun4(20) << endl;
 	cout << "bind 成员函数指针6：" << fun5(p, 24) << endl;
+
+	//------------------------------------------------------------------------
 
 	//use member function pointer callable object to make sort simpler
 	Person p1("李四", 20, "女");
@@ -182,6 +217,7 @@ int main()
 
 	cout << endl << endl;
 
+	//------------------------------------------------------------------------
 	//lambda
 	vector<Person> persons4{ p, p1, p2, p3, p4 };
 	sort(persons4.begin(), persons4.end(), [](const Person& a, const Person& b)
@@ -210,7 +246,7 @@ int main()
 	cout << "class overload (): " << older_fun_class(p, p4) << endl;
 	cout << "struct overload (): " << older_fun_struct(p, p4) << endl;
 
-	//--------------------------------------------
+	//------------------------------------------------------------------------
 	//use three way to achieve callback
 	p.SetSayFun1(Say_Fun);		//function pointer
 	p.SetSayFun2(Say_Fun);		//std::function
@@ -222,6 +258,19 @@ int main()
 	//bind can change the parameters' order
 	p.SetSayFun2(bind(Say_Fun, placeholders::_2, placeholders::_1));
 	p.Say2("Hello!");
+
+	cout << endl << endl;
+	//------------------------------------------------------------------------
+	//function pointer type
+	auto fun_get1 = p.GetSayFun1();
+	auto fun_get2 = p.GetSayFun1_1();
+	auto fun_get3 = p.GetSayFun1_2();
+	auto fun_get4 = p.GetSayFun2();
+
+	fun_get1("Hi!", "Lucas");
+	fun_get2("Hi!", "Lily");
+	fun_get3("Hi!", "Rose");
+	fun_get4("Hi!", "Sara");
 	
 	getchar();
 	return 0;
