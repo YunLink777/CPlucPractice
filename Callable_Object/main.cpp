@@ -13,9 +13,9 @@
 #include <vector>
 
 using namespace std;
-typedef void(*Say_CallBack)(const string&, const string&);	//define a callback with function pointer
-typedef function<void(const string&, const string&)> Say_Function;	//define a function
-typedef function<void(const string&)> Say_Hi_Function;	//define a function
+typedef void(*Say_CallBack)(const string&, const string&);	//define a callback type with function pointer
+typedef function<void(const string&, const string&)> Say_Function;	//define a function type
+typedef function<void(const string&)> Say_Hi_Function;	//define a function type
 
 class Person
 {
@@ -145,19 +145,19 @@ int main()
 
 	int (Person:: * fun_pointer1)() const = &Person::GetAge;	//member function pointer, if the mem f is const, the pointer should be const too
 	auto fun_pointer2 = &Person::GetAge;	//use auto keyword, let the complier judge the type
-	using fun_GetAge = int (Person::*)() const;	//use alias
-	fun_GetAge fun_pointer3 = &Person::GetAge;	//give the function's address
+	using fun_GetAge_type = int (Person::*)() const;	//use alias
+	fun_GetAge_type fun_pointer3 = &Person::GetAge;	//give the function's address
 
 	cout << "成员函数指针1：" << (p.*fun_pointer1)() << endl;	//the () is necessary
 	cout << "成员函数指针2：" << (p.*fun_pointer2)() << endl;
 	cout << "成员函数指针3：" << (p.*fun_pointer3)() << endl;
 
 	//------------------------------------------------------------------------
-	//But member function pointer is not a callable object, it cannot be called by.* or ->*, and it cannot be passed to an algorithm interface
+	//But member function pointer is not a callable object, it can only be called by.* or ->*, and it cannot be passed to an algorithm interface
 	//So we can use std::function、std::bind、std::mem_fn to encapsulate a member function pointer to a callable object
 	//------------------------------------------------------------------------
 
-	//function create a callable object, point to member function pointer, the first parameter is the object, it can be a ref or a pointer
+	//std::function create a callable object, point to member function pointer, the first parameter is the object, it can be a ref or a pointer
 	function<int(Person*)> fun1 = &Person::GetAge;	
 	cout << "function 成员函数指针：" << fun1(&p) << endl;
 	function<bool(Person&, int)> fun2 = &Person::OlderThanAge;
@@ -170,6 +170,7 @@ int main()
 	cout << "mem_fn 成员函数指针4：" << fun3(p, 20) << endl;
 	cout << "mem_fn 成员指针：" << data1(p) << endl;
 
+	//std::bind is much stronger than mem_fn, mem_fn can only encapsulate class members, bind can encapsulate any kind of functions, and can also adapter parameters
 	function<int(int)> fun4 = bind(&Person::OlderThanAge, &p, std::placeholders::_1);	//bind is like mem_fn, but it can also adapt the parameters
 	auto fun5 = bind(&Person::OlderThanAge, std::placeholders::_1, std::placeholders::_2);
 	cout << "bind 成员函数指针5：" << fun4(20) << endl;
@@ -272,6 +273,6 @@ int main()
 	fun_get3("Hi!", "Rose");
 	fun_get4("Hi!", "Sara");
 	
-	getchar();
+	int i = getchar();
 	return 0;
 }
