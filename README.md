@@ -9,3 +9,8 @@ C++ practice demos，every folder contains a main.cpp, which can be complied and
 ## Callable Objects:
 function pointer, member pointer, member function pointer, std::bind、function、mem_fn、lambda、class overload()、callback、normal function pointer
 
+## 指针和引用
+NULL&nullptr  shared_ptr  make_shared
+
+## Pointer&Reference
+NULL&nullptr  shared_ptr  make_shared
