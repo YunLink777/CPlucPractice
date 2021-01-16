@@ -211,5 +211,43 @@ void main(int argc, char* argv[])
 	spc->spd = spd;	// shared_ptr cast to weak_ptr
 	spd->spc = spc;
 
+	//---------------------------------------------
+	//unique_ptr
+	unique_ptr<Test> uptr;
+	if (!uptr)
+	{
+		cout << "unique_ptr is empty." << endl;
+	}
+
+	if (uptr == nullptr)
+	{
+		cout << "unique_ptr is empty." << endl;
+	}
+
+	uptr = make_unique<Test>();
+	if (uptr != nullptr)
+	{
+		uptr->print();
+	}
+
+	unique_ptr<Test> uptr2(uptr.release());	//uptr give up the resource, uptr2 get the resource
+
+	if (uptr == nullptr)
+	{
+		cout << "unique_ptr is empty." << endl;
+	}
+	uptr2->print();
+	
+	//std::move can move one unique pointer's resource to another unique pointer
+	//unique pointer cannot assign to another unique pointer, and cannot copy to another
+	uptr = std::move(uptr2);
+	if (uptr2 == nullptr)
+	{
+		cout << "unique_ptr is empty." << endl;
+	}
+	uptr->print();
+
+	uptr.reset();	//release the Test object, uptr become empty
+
 	getchar();
 }
