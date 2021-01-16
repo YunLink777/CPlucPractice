@@ -11,6 +11,8 @@ function pointer, member pointer, member function pointer, std::bind、function�
 
 ## 指针和引用
 NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
+多态
 
 ## Pointer&Reference
 NULL&nullptr  shared_ptr  make_shared  weak_ptr  circular reference  unique_ptr
+polymorphic
