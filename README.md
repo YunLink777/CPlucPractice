@@ -11,8 +11,8 @@ function pointer, member pointer, member function pointer, std::bind、function�
 
 ## 指针和引用
 NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
-多态、右值引用、std::move，std::forward
+多态、右值引用、std::move，std::forward, std::reference_wrapper
 
 ## Pointer&Reference
 NULL&nullptr  shared_ptr  make_shared  weak_ptr  circular reference  unique_ptr
-polymorphic  rvalue reference   std::move  std::forward
+polymorphic  rvalue reference   std::move  std::forward  std::reference_wrapper

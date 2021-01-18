@@ -7,6 +7,10 @@
  * \description: Reference Demo
  */
 #include <iostream>
+#include <numeric>
+#include <random>
+#include <vector>
+#include <list>
 using namespace std;
 
 //-------------------------------------------
@@ -76,6 +80,20 @@ void forwardValue(T&& val)
 	processValue(std::forward<T>(val)); 
 }
 
+//-----------------------------------------------
+//std::reference_wrapper
+template <typename T>
+void testPrint(T t) 
+{
+	++t;
+}
+
+//if you call a member function in template function, and you pass the T as std::ref way, you must call the member function after get() to get the ref of the object
+template <typename T>
+void testPrint1(T t)
+{
+	t.get().print();
+}
 
 int main(int argc, char* argv[])
 {
@@ -107,6 +125,65 @@ int main(int argc, char* argv[])
 	int aa = 10;
 	forwardValue(10);
 	forwardValue(aa);
+
+	//-----------------------------------------------
+	//std::reference_wrapper
+	//wrap a value to a reference object
+	int x = 10;
+	testPrint(x);	//pass as value
+	cout << "x: " << x << endl;
+
+	//two kinds of std::reference_wrapper useage
+	auto y = std::ref(x);
+	std::reference_wrapper<decltype(x)> z(x);
+
+	testPrint(std::ref(x));	//pass as ref through std::ref
+	cout << "x: " << x << endl;
+	testPrint(y);
+	cout << "x: " << x << endl;
+	testPrint(z);
+	cout << "x: " << x << endl;
+
+	//call member function with ref
+	testPrint1(std::ref(a));
+
+	//------------------------------------------
+	//std::ref in std container
+	//the std container only support value not ref, but you can pass ref with std::ref
+	std::list<int> l(10);
+	std::iota(l.begin(), l.end(), -4);
+	//create a vector with elements are ref of list l
+	std::vector<std::reference_wrapper<int> > v(l.begin(), l.end());
+
+	// can't use shuffle on a list (requires random access), but can use it on a vector
+	std::shuffle(v.begin(), v.end(), std::mt19937{ std::random_device{}() });
+
+	cout << "Contents of the list: ";
+	for (auto i : l)
+	{
+		cout << i;
+	}
+	cout << endl;
+
+	cout << "Contents of the vector: ";
+	for (auto i : v)
+	{
+		cout << i;
+	}
+	cout << endl;
+
+	cout << "Doubling the values in the initial list...\n";
+	for (int& i : l)
+	{
+		i *= 2;
+	}
+
+	cout << "Contents of the vector: ";
+	for (auto i : v)
+	{
+		cout << i;
+	}
+	cout << endl;
 
 	getchar();
 	return 0;
