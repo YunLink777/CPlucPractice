@@ -100,8 +100,10 @@ int main(int argc, char* argv[])
 
 	Test rt1(GetTest());	//move copy constructor
 	Test rt2(std::move(t));	//use std::move to make a lvalue to a rvalue, so move copy constructor will be called
+	Test rt3 = std::move(t);
 
-	//Perfect forwarding
+	//Perfect forwarding, when processing type inference, formal parameter T&& will be rvalue reference when actual parameter is rvalue, 
+	//T&& will be lvalue reference when actual parameter is lvalue
 	int aa = 10;
 	forwardValue(10);
 	forwardValue(aa);
