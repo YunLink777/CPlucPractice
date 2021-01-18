@@ -159,14 +159,14 @@ int main(int argc, char* argv[])
 	std::shuffle(v.begin(), v.end(), std::mt19937{ std::random_device{}() });
 
 	cout << "Contents of the list: ";
-	for (auto i : l)
+	for (auto& i : l)
 	{
 		cout << i;
 	}
 	cout << endl;
 
 	cout << "Contents of the vector: ";
-	for (auto i : v)
+	for (auto& i : v)
 	{
 		cout << i;
 	}
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 	}
 
 	cout << "Contents of the vector: ";
-	for (auto i : v)
+	for (auto& i : v)
 	{
 		cout << i;
 	}
