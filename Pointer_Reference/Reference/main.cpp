@@ -185,6 +185,13 @@ int main(int argc, char* argv[])
 	}
 	cout << endl;
 
+	cout << "Contents of the list: ";
+	for (auto& i : l)
+	{
+		cout << i;
+	}
+	cout << endl;
+
 	getchar();
 	return 0;
 }
