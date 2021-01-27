@@ -14,13 +14,13 @@
 using namespace std;
 
 //-------------------------------------------
-//polymorphic
+//多态
 class A
 {
 public:
 	A() { cout << "Class A constructing..." << endl; }
 	~A() { cout << "Class A destructing..." << endl; }
-	//use keyword virtual to define this member function can be inherit by A's derived class, and it's polymorphic
+	//使用virtual关键字指定成员函数是虚函数
 	virtual void print()
 	{
 		cout << "Class A print." << endl;
@@ -71,7 +71,7 @@ Test&& GetTest()
 	return Test();
 }
 
-//Perfect forwarding
+//Perfect forwarding完美转发
 void processValue(int& a) { cout << "lvalue" << endl; }
 void processValue(int&& a) { cout << "rvalue" << endl; }
 template <typename T>
@@ -88,7 +88,7 @@ void testPrint(T t)
 	++t;
 }
 
-//if you call a member function in template function, and you pass the T as std::ref way, you must call the member function after get() to get the ref of the object
+//通过模板函数调用成员函数，T是通过std::ref的方式传入的，必须通过get()方法获得对象的引用后再调用成员函数
 template <typename T>
 void testPrint1(T t)
 {
@@ -101,14 +101,14 @@ int main(int argc, char* argv[])
 	B b;
 	C c;
 	A& refA = c;
-	refA.print();	//refA ref to a C object, and print is virtual, so this print is c's print
+	refA.print();	//print是虚函数，refA指向C对象，此处调用是C的print
 
 	//-------------------------------------------
 	//rvalue reference
 	int i = 10;
 	int& lr = i;
-	int&& rr = 10;	//when rvalue reference is declared, it must be initialized by rvalue
-	rr = 100;	//rvalue reference can change rvalue
+	int&& rr = 10;	//和左值引用一样，声明右值引用时也必须初始化
+	rr = 100;	//右值引用可以修改右值
 
 	Test test();
 	cout << "Before copy" << endl;
@@ -116,12 +116,11 @@ int main(int argc, char* argv[])
 	cout << "Before move" << endl;
 	Test&& rt = GetTest();
 
-	Test rt1(GetTest());	//move copy constructor
-	Test rt2(std::move(t));	//use std::move to make a lvalue to a rvalue, so move copy constructor will be called
+	Test rt1(GetTest());	//移动构造函数
+	Test rt2(std::move(t));	//使用 std::move 将左值转换为右值，因此可以调用移动构造函数
 	Test rt3 = std::move(t);
 
-	//Perfect forwarding, when processing type inference, formal parameter T&& will be rvalue reference when actual parameter is rvalue, 
-	//T&& will be lvalue reference when actual parameter is lvalue
+	//完美转发，当进行类型推导时，实参是右值引用，形参T&&就是右值引用，实参是左值引用，T&&就是左值引用
 	int aa = 10;
 	forwardValue(10);
 	forwardValue(aa);
