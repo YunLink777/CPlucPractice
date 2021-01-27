@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/15
  *
- * \description: Pointer and Reference Demo
+ * \brief 指针Demo
  */
 #include <iostream>
 #include <memory>
@@ -41,7 +41,7 @@ void thr(std::shared_ptr<Test> p)
 	//sleep for 1 second
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	//assign a new shared_ptr, increase the use_count by 1, in shred_ptr, the increase count is atomic
+	//赋值一个新的shared_ptr,共享指针内的use_count加一，use_count是atomic的，线程安全
 	std::shared_ptr<Test> lp = p;
 	{
 		//static mutex, used in all the threads
@@ -54,7 +54,7 @@ void thr(std::shared_ptr<Test> p)
 }
 
 //---------------------------------------------
-//circular reference between two shared_ptr
+//两个shared_ptr之间循环引用
 class A
 {
 public:
@@ -87,7 +87,7 @@ public:
 	shared_ptr<class A> spa;
 };
 
-//use weak_ptr instead of shared_ptr within class to destroy the circular reference
+//在类内使用weak_ptr替代shared_ptr，打破循环引用
 class C
 {
 public:
@@ -127,16 +127,16 @@ void main(int argc, char* argv[])
 
 	//---------------------------------------------
 	//shared_ptr use_count
-	//use make_shared to create all the memory once
-	//if use "shared_ptr<Test> p(new Test())", new Test will be run first, a memory will be created, then another memory will be created by shared_ptr
-	//the two part of memory are not serial
+	//使用 make_shared 一次创建所有内存
+	//如果使用 "shared_ptr<Test> p(new Test())", new Test 会先执行, Test对象的内存被创建出来, 然后shared_ptr的其他内存才会被创建出来
+	//两部分内存不是连续的
 	shared_ptr<Test> p = make_shared<Test>();
 
 	cout << "Create a shared pointer Test:\n" << " p->get() = " << p.get() << "  p.use_count() = " << p.use_count() << endl;
 
 
 	//create three threads
-	//formal parameters copy the pointer, increase the use count
+	//形参拷贝了shared_ptr，引用计数增加
 	std::thread t1(thr, p), t2(thr, p), t3(thr, p);
 	std::cout << "Shared ownership between 3 threads and released\n"
 		<< "ownership from main:\n" << " p->get() = " << p.get() << "  p.use_count() = " << p.use_count() << endl;
@@ -150,27 +150,27 @@ void main(int argc, char* argv[])
 
 	//---------------------------------------------
 	//shared_ptr * and ->
-	//All three expressions below are calling print of Test object
+	//下面三种方式都是调用Test的print
 	p->print();
 	(p.get())->print();
 	(*p).print();
 
 	shared_ptr<Test> p2;
-	//judge the pointer in the shared_ptr
+	//判断shared_ptr内的对象指针是否为空
 	if (p2 == nullptr)
 	{
 		cout << "pointer in shared_ptr is null\n";
 	}
 	p2 = p;
 	cout << "p's use_count: " << p.use_count() << endl;
-	p2.reset();	//reset shared_ptr p2, but use_count != 0, Test object isn't destoryed.
+	p2.reset();	//reset shared_ptr p2, 但是use_count != 0, Test 对象不会被释放.
 	cout << "p's use_count: " << p.use_count() << endl;
-	p.reset();	//reset shared_ptr p, but use_count == 0, Test object is destoryed.
+	p.reset();	//reset shared_ptr p, use_count == 0, Test 对象被释放.
 	if (p == nullptr)
 	{
 		cout << "pointer in shared_ptr is null\n";
 	}
-	p.reset(new Test());	//reset shared_ptr p with new Test object, use_count == 1, if p already owned an object, the use_count will decrease by 1
+	p.reset(new Test());	//reset shared_ptr p 的同时创建 new Test 对象, use_count == 1, 如果p已经拥有了一个指针，则use_count会减一，同时拥有新的对象指针
 	p->print();
 	cout << "p's use_count: " << p.use_count() << endl;
 
@@ -179,7 +179,7 @@ void main(int argc, char* argv[])
 	weak_ptr<Test> wk_p(p);
 	p2 = p;
 	cout << "shared_ptr use count: " << p.use_count() << endl;
-	cout << "weak_ptr use count: " << wk_p.use_count() << endl;	//weak_ptr don't increase the use count
+	cout << "weak_ptr use count: " << wk_p.use_count() << endl;	//weak_ptr 不会增加use_count
 	shared_ptr<Test> p3 = wk_p.lock();	//create a new shared_ptr through lock()
 	cout << "weak_ptr use count: " << wk_p.use_count() << endl;
 	p3.reset();

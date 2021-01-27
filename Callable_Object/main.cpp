@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/12
  *
- * \description:Callable Objects Demo
+ * \brief 可调用对象Demo
  */
 #include <algorithm>
 #include <iostream>
@@ -13,9 +13,9 @@
 #include <vector>
 
 using namespace std;
-typedef void(*Say_CallBack)(const string&, const string&);	//define a callback type with function pointer
-typedef function<void(const string&, const string&)> Say_Function;	//define a function type
-typedef function<void(const string&)> Say_Hi_Function;	//define a function type
+typedef void(*Say_CallBack)(const string&, const string&);	//通多函数指针定义回调类型
+typedef function<void(const string&, const string&)> Say_Function;	//定义一个函数类型
+typedef function<void(const string&)> Say_Hi_Function;	
 
 class Person
 {
@@ -31,7 +31,7 @@ public:
 	string xb;
 
 	//------------------------------------------------------------------------
-	//use two way to achieve callback
+	//使用两种方式实现回调
 	void SetSayFun1(Say_CallBack say_callback)
 	{
 		say_fun1 = say_callback;
@@ -66,25 +66,25 @@ public:
 	}
 
 	//------------------------------------------------------------------------
-	//Get function pointer as callable object
+	//获取函数指针作为可调用对象
 	Say_CallBack GetSayFun1()
 	{
 		return say_fun1;
 	}
 
-	//Get std::function as callable object
+	//获取std::function作为可调用对象
 	Say_Function GetSayFun2()
 	{
 		return say_fun2;
 	}
 
-	//Get function pointer as callable object, but use function pointer type as the return value, you can treat GetSayFun1_1() as a function pointer name
+	//获得一个函数指针，此处使用函数指针类型作为返回值，可以将GetSayFun1_1()看作一个函数指针名，便于理解
 	void (*GetSayFun1_1())(const string&, const string&)
 	{
 		return say_fun1;
 	}
 
-	//Get function pointer as callable object, but use function pointer type as the return value, -> means return value type
+	//获得一个函数指针，此处使用函数指针类型作为返回值，->表示返回值类型
 	auto GetSayFun1_2() -> void(*)(const string&, const string&)
 	{
 		return say_fun1;
@@ -112,7 +112,7 @@ void Say_Fun(const string& word, const string& who)
 	cout << who << " is saying: " << word << endl;
 }
 
-//overload () to make Older object a callable object
+//通过重载()操作符使对象变成一个可调用对象
 class Older
 {
 public:
