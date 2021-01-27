@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/12
  *
- * \description:Callable Objects Demo
+ * \brief Callable Objects Demo
  */
 #include <algorithm>
 #include <iostream>

@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/15
  *
- * \description: Pointer and Reference Demo
+ * \brief Pointer Demo
  */
 #include <iostream>
 #include <memory>

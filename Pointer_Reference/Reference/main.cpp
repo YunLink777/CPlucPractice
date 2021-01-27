@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/16
  *
- * \description: Reference Demo
+ * \brief Reference Demo
  */
 #include <iostream>
 #include <numeric>
