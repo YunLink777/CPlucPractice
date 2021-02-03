@@ -114,8 +114,8 @@ int main(int argc, char* argv[])
 	cout << "Before copy" << endl;
 	Test t = GetTest();
 	cout << "Before move" << endl;
-	Test&& rt = GetTest();
-
+	Test&& rt = GetTest();	//GetTest返回的临时变量就是右值，直接赋值给rt，此处没有移动构造函数
+	cout << "Before move1" << endl;
 	Test rt1(GetTest());	//移动构造函数
 	Test rt2(std::move(t));	//使用 std::move 将左值转换为右值，因此可以调用移动构造函数
 	Test rt3 = std::move(t);
