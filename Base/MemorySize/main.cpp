@@ -74,6 +74,41 @@ public:
 	}
 };
 
+class DeriveD : public virtual Base
+{
+public:
+
+	virtual void PrintName()
+	{
+		cout << "DeriveD" << endl;
+	}
+};
+
+class DeriveE : public virtual Base
+{
+public:
+
+	int m_bValue;
+
+	virtual void PrintName()
+	{
+		cout << "DeriveE" << endl;
+	}
+
+	virtual void run() {};
+};
+
+class DeriveF : public DeriveD, public DeriveE
+{
+public:
+	int m_iValue;
+	virtual void PrintName()
+	{
+		cout << "DeriveF" << endl;
+	}
+	virtual void RunF() {};
+};
+
 int main()
 {
 	//在C++里，NULL就是0，nullptr是空指针
@@ -140,11 +175,31 @@ int main()
 	DeriveC C;
 	BaseA* base1 = new BaseA;
 
-	PrintTypeSize(base);	//16字节, m_iValue4字节,虚函数表指针8字节,对齐后就是16字节
-	PrintTypeSize(A);	//16字节,Base的m_iValue 4字节,虚函数表指针8字节,对齐后就是16字节
-	PrintTypeSize(B);	//24字节,再加上自己的m_bValue4字节,对齐就是24字节
-	PrintTypeSize(C);	//40字节,就是A和B的大小之和,Base对象有两份
-	PrintTypeSize(*base1);	//没有成员变量,但是编译器会插入一个char,1个字节
+	//16字节, m_iValue4字节,虚函数表指针8字节,对齐后就是16字节,内存结构:Base虚函数表-Base成员
+	PrintTypeSize(base);	
+	//16字节,Base的m_iValue 4字节,虚函数表指针8字节,对齐后就是16字节,内存结构:A和Base虚函数表表-Base成员
+	PrintTypeSize(A);	
+	//24字节,再加上自己的m_bValue4字节,对齐就是24字节,内存结构:B和Base虚函数表-Base成员-B成员
+	PrintTypeSize(B);	
+	//40字节,就是A和B的大小之和 Base对象有两份,虚函数表指针也有两个,A一个B一个,还有一个m_bValue
+	//内存结构:C和A虚函数表-Base成员-B虚函数表-Base成员-B成员
+	PrintTypeSize(C);	
+	//没有成员变量,但是编译器会插入一个char,1个字节
+	PrintTypeSize(*base1);	
+
+	cout << "***************************" << endl;
+
+	DeriveD D;
+	DeriveE E;
+	DeriveF F;
+
+	//24字节,D没有新的虚函数,虚继承Base后,内存结构依次为:D虚基类表-Base的虚函数表-Base成员
+	PrintTypeSize(D);	
+	//40字节,E有新的虚函数,因此有自己的虚函数表
+	//内存结构依次为:E虚函数表-E虚基类表-E成员-Base虚函数表-Base成员
+	PrintTypeSize(E);	
+	//56字节,内存结构依次为F虚函数表-D虚基类表-E虚基类表-E成员-F成员-Base虚函数表-Base成员
+	PrintTypeSize(F);	
 	
 
 	getchar();
