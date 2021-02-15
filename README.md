@@ -14,3 +14,6 @@ NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
 
 ### StorageLinkage
 存储期和链接属性，static、extern、thread_local
+
+### Static
+静态全局变量、静态局部变量、静态函数、静态成员变量、静态成员函数
