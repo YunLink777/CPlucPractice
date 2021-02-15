@@ -1,4 +1,5 @@
 #include "Test.h"
+#include <windows.h>
 
 //静态全局变量,内部链接只在本文件内可见
 static int iStaticGlobal = 16;
@@ -20,6 +21,13 @@ void func()
 {
 	std::cout << "func in Test.cpp ";
 	FuncStatic();
+}
+
+Test::Test()
+{
+	//增加延时，使构造过程更明显
+	Sleep(4000);
+	std::cout << "Test constructing finished." << std::endl;
 }
 
 //静态成员变量初始化

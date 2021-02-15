@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <thread>
 #include "Test.h"
 
 using namespace std;
@@ -32,6 +33,14 @@ void Func()
 	cout << "iStatic: " << iStatic++ << endl;
 }
 
+void CreateTest(const std::string& thread_name)
+{
+	//c++11开始，静态局部变量初始化过程中，如果多个线程都执行此段代码，最开始的线程初始化结束前，其他线程都会等待最开始的线程初始化结束
+	cout << thread_name << " thread start" << endl;
+	static Test test;
+	cout << thread_name << " thread end" << endl;
+}
+
 int main()
 {
 	//static变量是内部链接,外部文件无法访问
@@ -51,6 +60,9 @@ int main()
 	Test a, b;
 	cout << "Test a.m_iStatic: " << a.m_iStatic << endl;
 	cout << "Test b.m_iStatic: " << b.m_iStatic << endl;
+
+	std::thread A (CreateTest, "A"), B(CreateTest, "B");
+
 	getchar();
 	return 0;
 }
