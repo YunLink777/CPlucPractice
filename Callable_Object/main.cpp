@@ -17,6 +17,39 @@ typedef void(*Say_CallBack)(const string&, const string&);	//define a callback t
 typedef function<void(const string&, const string&)> Say_Function;	//define a function type
 typedef function<void(const string&)> Say_Hi_Function;	//define a function type
 
+int func()
+{
+	return 1;
+}
+using FuncType = int(*)();
+//返回函数指针的函数的四种定义形式
+FuncType funcReturn()
+{
+	return func;
+}
+auto funcReturnA() -> int(*)()
+{
+	return func;
+}
+
+auto funcReturnB() -> FuncType
+{
+	return func;
+}
+
+int (*funcReturnC())()
+{
+	return func;
+}
+
+//此种定义错误，函数指针类型有固有格式，名称必须放到(*)中的*后面
+//int (*)() funcReturnD()
+//{
+//	return func;
+//}
+
+/*******************************************************************/
+
 class Person
 {
 public:
@@ -132,6 +165,16 @@ struct Older_Struct
 
 int main()
 {
+	//函数指针和返回函数指针的函数
+	int(*ptrfunc)() = funcReturn();
+	cout << ptrfunc() << endl;
+	ptrfunc = funcReturnA();
+	cout << ptrfunc() << endl;
+	ptrfunc = funcReturnB();
+	cout << ptrfunc() << endl;
+	ptrfunc = funcReturnC();
+	cout << ptrfunc() << endl;
+
 	Person p("张三", 22, "女");
 
 	string Person::* ptr = &Person::xb;	//mem pointer
