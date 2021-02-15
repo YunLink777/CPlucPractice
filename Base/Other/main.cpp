@@ -168,6 +168,8 @@ int main()
      //auto会执行，decltype不会执行
      auto n = func();
      decltype(func()) o = 1;
+     //decltype(func)是函数类型，加*就是函数指针类型，可指向lambda表达式
+     decltype(func)* oo = []() { return 1; };
 
 	getchar();
 	return 0;
