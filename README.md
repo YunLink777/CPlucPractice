@@ -17,4 +17,4 @@ NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
 
 ### Static
 静态全局变量、静态局部变量、静态函数、静态成员变量、静态成员函数
-静态局部变量初始化线程同步机制
+静态局部变量和非静态局部变量的初始化时机，静态局部变量初始化线程安全机制

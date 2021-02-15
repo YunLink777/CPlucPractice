@@ -28,21 +28,27 @@ namespace TestLinkage
 
 void Func()
 {
-	//静态局部变量,不随作用域结束释放
+	//静态局部变量(local static),不随作用域结束释放
 	static int iStatic = 0;
 	cout << "iStatic: " << iStatic++ << endl;
 }
 
 void CreateTest(const std::string& thread_name)
 {
-	//c++11开始，静态局部变量初始化过程中，如果多个线程都执行此段代码，最开始的线程初始化结束前，其他线程都会等待最开始的线程初始化结束
+	//静态局部变量(local static)在所属函数被第一次调用前并不存在，只有第一次调用时才开始初始化
+	//非静态局部变量(全局  成员  命名空间内等)在main函数执行前就已经完成了初始化
+	//c++11开始，静态局部变量(local static)初始化过程中，如果多个线程都执行此段代码，最开始的线程初始化结束前，其他线程都会等待最开始的线程初始化结束
 	cout << thread_name << " thread start" << endl;
 	static Test test;
 	cout << thread_name << " thread end" << endl;
 }
 
+//非静态局部变量(全局  成员  命名空间内等)在main函数执行前就已经完成了初始化
+static Test staticTest;
+
 int main()
 {
+	cout << "main start" << endl;
 	//static变量是内部链接,外部文件无法访问
 	//cout << TestLinkage::iStaticNameSpace;
 	//cout << iStaticGlobal;
