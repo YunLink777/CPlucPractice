@@ -21,3 +21,7 @@ NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
 
 ### Other
 const  volatile  auto  decltype  强制类型转换
+
+## 面向对象
+### 面向对象基础
+大括号初始化，特殊成员函数，特殊成员函数的default和delete
