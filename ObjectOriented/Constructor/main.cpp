@@ -117,13 +117,24 @@ public:
 		: m_i(i)
 		, m_f(f)
 		, m_b(b)
-	{}
+	{
+		cout << "Test(int i, float f, bool b) called." << endl;
+	}
+
+	//委托构造函数
+	Test() : Test(0, 0.0, false) 
+	{
+		cout << "Test() called." << endl;
+	}
 	void fun();
 
 	int m_i;
 	float m_f;
 	bool m_b;
 };
+
+//委托构造函数，也可以在类定义外的构造函数定义中指明委托构造函数
+//Test::Test():Test(0, 0.0, false){}
 
 void Test::fun()
 {
@@ -164,6 +175,13 @@ int main()
 	{
 		E e;
 		cout << "*************************************\n";
+	}
+
+	cout << "*************************************\n";
+
+	//委托构造函数
+	{
+		Test t;
 	}
 
 	cout << "*************************************\n";
