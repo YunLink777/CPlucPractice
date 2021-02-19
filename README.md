@@ -27,4 +27,4 @@ const  volatile  auto  decltype  强制类型转换
 大括号初始化，特殊成员函数，特殊成员函数的default和delete
 
 ### 构造、析构相关
-虚析构函数、explicit、构造析构调用顺序
+虚析构函数、explicit、构造析构调用顺序、initializer_list
