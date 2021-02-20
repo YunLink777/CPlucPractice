@@ -120,11 +120,11 @@ class Test
 {
 public:
 	//初始化列表的顺序并不是真实的构造顺序，真实的顺序是变量声明的顺序
-	Test(int i, float f, bool b, int gInt, int rInt)
+	Test(int i, float f, bool b, int kInt, int rInt)
 		: m_i(i)
 		, m_f(f)
 		, m_b(b)
-		, m_gInt(gInt)
+		, m_kInt(kInt)
 		, m_rInt(rInt)
 		, test1(i)
 	{
@@ -139,7 +139,7 @@ public:
 
 	Test(const Test& t)
 		: test1(t.test1)
-		, m_gInt(0)
+		, m_kInt(0)
 		, m_rInt(t.m_rInt)
 	{
 		cout << "Test copy constructor called\n";
@@ -152,7 +152,7 @@ public:
 	int m_i;
 	float m_f;
 	bool m_b;
-	const int m_gInt;
+	const int m_kInt;
 	int& m_rInt;
 	Test1 test1;
 };
@@ -251,6 +251,7 @@ int main()
 	cout << "********************************\n";
 	//initialzer_list
 	//此处只创建3个Test对象,test这个对象会被拷贝一个副本到list_t里,拷贝构造函数会被调用
+	//initializer_list_list中的元素都是常量
 	initializer_list<Test> list_t = { test, {0, 1.1, false, 0, 0}, {1, 2.1, true, 0, 0}, {4, 3.1, true, 0, 0} };
 
 	//一个initializer_list对象赋值给另一个initializer_list对象,元素不会拷贝,只是引用
