@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/1/16
  *
- * \brief 面向对象重载、重写（覆盖）、隐藏相关demo
+ * \brief 面向对象重载、重写（覆盖）、隐藏、多态相关demo
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 using namespace std;
 
 //重写\覆盖*****************************************//
+//重写是中动态多态，是类多态
 class Base
 {
 public:
@@ -81,6 +82,7 @@ public:
 };
 
 //重载*****************************************//
+//重载是中静态多态
 class Animal
 {
 public:
