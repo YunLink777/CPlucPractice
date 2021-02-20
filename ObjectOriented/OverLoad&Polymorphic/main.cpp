@@ -14,7 +14,9 @@
 using namespace std;
 
 //重写\覆盖*****************************************//
-//重写是中动态多态，是类多态
+//重写是中动态多态，是类的多态性
+//是通过一个类所有对象共享的虚函数表来实现的
+//派生类的虚函数表先拷贝基类的虚函数表，如果派生类重写了某个虚函数，就将虚函数表中该函数地址替换为自己重写的函数地址
 class Base
 {
 public:
@@ -82,7 +84,7 @@ public:
 };
 
 //重载*****************************************//
-//重载是中静态多态
+//重载是中静态多态，是函数的多态性
 class Animal
 {
 public:
@@ -111,6 +113,33 @@ public:
 
 	string name_;
 };
+
+//通过虚函数表调用基类的private函数*****************************************//
+using Func = void(*)();
+class A
+{
+private:
+	virtual void Func1()
+	{
+		cout << "A Func1" << endl;
+	}
+
+	virtual void Func2()
+	{
+		cout << "A Func2" << endl;
+	}
+};
+
+class B : public A
+{
+public:
+	virtual void Func2()
+	{
+		cout << "B Func2" << endl;
+	}
+};
+
+//运算符重载*****************************************//
 
 int main()
 {
@@ -146,6 +175,34 @@ int main()
 	cat.Eat("Fish");
 	Animal fish("Fish");
 	cat.Eat(fish);
+
+	cout << "****************************" << endl;
+	//通过虚函数表调用基类的private函数*****************************************//
+	B b;
+	A a;
+	A* pA = &b;
+
+	//无法直接调用A的private函数
+	//pA->Func1();
+	//pA->Func2();
+	//由于虚函数表有所有虚函数的地址，包括private，可以通过直接访问虚函数表中的内容获取private虚函数的指针进行调用
+	//&a就是a对象的地址或指针，同时也是虚函数表地址的指针，但类型是A类型的，转换为long long*，就是虚函数表的地址的指针。
+	//*(long long*)(&a)就是获得虚函数表的地址，即虚函数表的指针，
+	//转换为(long long*)，就是虚函数表开头第一个虚函数的指针， + 1的话就是第二个函数的指针
+	Func func1 = (Func)(*(long long*)*(long long*)(&b));
+	//调用了A的func1函数
+	func1();
+
+	Func func2 = (Func)(*((long long*)*(long long*)(&b) + 1));
+	//调用了B的func2函数
+	func2();
+
+	//调用了a的func2函数
+	Func func3 = (Func)(*((long long*)*(long long*)(&a) + 1));
+	func3();
+
+	cout << "****************************" << endl;
+	//运算符重载*****************************************//
 
 	system("pause");
 	return 0;

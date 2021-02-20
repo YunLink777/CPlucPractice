@@ -22,12 +22,12 @@ NULL&nullptr  shared_ptr  make_shared  weak_ptr  循环引用  unique_ptr
 ### Other
 const  volatile  auto  decltype  强制类型转换
 
-## 面向对象
-### 面向对象基础
+## 面向对象ObjectOriented
+### 面向对象基础Base
 大括号初始化，特殊成员函数，特殊成员函数的default和delete
 
-### 构造、析构相关
+### 构造、析构相关Constructor
 虚析构函数、explicit、构造析构调用顺序、initializer_list
 
-### 重载、多态相关
-重载、覆盖，操作符重载，重写，隐藏，多态
+### 重载、多态相关Overload&Polymorphic
+重载、覆盖，运算符重载，重写，隐藏，多态，虚函数表直接访问
