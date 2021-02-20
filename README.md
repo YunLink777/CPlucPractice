@@ -28,3 +28,6 @@ const  volatile  auto  decltype  强制类型转换
 
 ### 构造、析构相关
 虚析构函数、explicit、构造析构调用顺序、initializer_list
+
+### 重载、重写、隐藏、多态相关
+重载、覆盖，操作符重载，重写，隐藏，多态
