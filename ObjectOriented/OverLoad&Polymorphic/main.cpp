@@ -140,6 +140,70 @@ public:
 };
 
 //运算符重载*****************************************//
+class Box
+{
+public:
+	Box(int width, int height, int length) : width_(width), height_(height), length_(length)
+	{
+
+	}
+	Box() : Box(0, 0, 0) {}
+
+	int Volume()
+	{
+		return width_ * height_ * length_;
+	}
+
+	int width()
+	{
+		return width_;
+	}
+
+	int height()
+	{
+		return height_;
+	}
+
+	int length()
+	{
+		return length_;
+	}
+
+	void set_width(int width)
+	{
+		width_ = width;
+	}
+
+	void set_height(int height)
+	{
+		height_ = height;
+	}
+
+	void set_length(int length)
+	{
+		length_ = length;
+	}
+
+	Box operator+ (const Box& box)
+	{
+		Box r_box;
+		r_box.set_width(box.width_ + this->width_);
+		r_box.height_ = box.height_ + this->height_;
+		r_box.length_ = box.length_ + this->length_;
+		return r_box;
+	}
+
+	friend ostream& operator<< (ostream& os, Box& box)
+	{
+		os << box.width() << " " << box.height() << " " << box.length();
+		return os;
+	}
+
+private:
+	int width_;
+	int height_;
+	int length_;
+};
 
 int main()
 {
@@ -203,6 +267,10 @@ int main()
 
 	cout << "****************************" << endl;
 	//运算符重载*****************************************//
+	Box box1(10, 10, 10);
+	Box box2(1, 2, 3);
+	Box box3 = box1 + box2;
+	cout << box3 << endl;
 
 	system("pause");
 	return 0;

@@ -30,4 +30,4 @@ const  volatile  auto  decltype  强制类型转换
 虚析构函数、explicit、构造析构调用顺序、initializer_list
 
 ### 重载、多态相关Overload&Polymorphic
-重载、覆盖，运算符重载，重写，隐藏，多态，虚函数表直接访问
+重载、覆盖，运算符重载，重写，隐藏，多态，虚函数表直接访问、运算符重载
