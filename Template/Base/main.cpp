@@ -4,7 +4,7 @@
  * \author YunLink777
  * \date 2021/2/22
  *
- * \brief 模板基础相关demo
+ * \brief 模板基础、万能引用相关demo
  */
 
 #include <iostream>
@@ -96,6 +96,57 @@ T Stack<T, MAXNUM>::Top()
 	return elements[element_num - 1];
 }
 
+//T&&是一个万能引用
+//另外auto&&也是万能引用
+template<typename T>
+void ProcessValue(T&& t)
+{
+	cout << "ProcessValue(T&& t)" << endl;
+}
+
+//const T&&是一个右值引用, 万能引用加上const就是一个右值引用
+//这样的原因是为了重载只接收右值引用的模板函数，或者显示禁用某个接收右值的函数
+template<typename T>
+void ProcessRValue(const T&& t)
+{
+	cout << "ProcessValue(const T&& t)" << endl;
+}
+
+template<typename T>
+void ProcessNTValue(T t)
+{
+	cout << "ProcessNTValue(T t)" << endl;
+}
+
+template<typename T>
+void ProcessNTValue(const T&& t) = delete;
+
+//重载只接收右值引用的函数
+template<typename T>
+void ProcessTValue(T& t)
+{
+	cout << "ProcessTValue(T& t)" << endl;
+}
+
+template<typename T>
+void ProcessTValue(const T&& t)
+{
+	cout << "ProcessTValue(const T&& t)" << endl;
+}
+
+template<typename T>
+void ProcessAutoValue(T t, auto&& a)
+{
+	cout << "ProcessAutoValue(auto&& a)" << endl;
+}
+
+template<typename T>
+void ProcessConstAutoValue(T t, const auto&& a)
+{
+	cout << "ProcessAutoValue(const auto&& a)" << endl;
+}
+
+
 int main()
 {
 	//模板函数*****************************************//
@@ -115,6 +166,31 @@ int main()
 	Stack<float, size> stack2;
 	cout << "****************************" << endl;
 
+	//万能引用*****************************************//
+	ProcessValue(1);
+	int a = 1;
+	ProcessValue(a);
+
+	//只接受右值引用
+	//ProcessRValue(a);
+	ProcessRValue(std::move(a));
+
+	ProcessNTValue(a);
+	//显示删除了右值引用版本
+	//ProcessNTValue(1);
+
+	//重载只接收右值引用版本的函数
+	ProcessTValue(a);
+	ProcessTValue(1);
+
+	//另外auto&&也是万能引用
+	ProcessAutoValue(1, 1);
+	ProcessAutoValue(1, a);
+
+	//const auto&&也只表示右值引用
+	ProcessConstAutoValue(1, 1);
+	//ProcessConstAutoValue(1, a);
+	ProcessConstAutoValue(1, std::move(a));
 	system("pause");
 	return 0;
 }
