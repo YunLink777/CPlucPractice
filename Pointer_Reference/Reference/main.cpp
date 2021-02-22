@@ -122,8 +122,16 @@ int main(int argc, char* argv[])
 
 	//完美转发，当进行类型推导时，实参是右值引用，形参T&&就是右值引用，实参是左值引用，T&&就是左值引用
 	int aa = 10;
-	forwardValue(10);
-	forwardValue(aa);
+	int&& bb = std::move(aa);
+	forwardValue(10);	//r
+	forwardValue(aa);	//l
+	forwardValue(bb);	//l		bb是右值引用，但是b自身是左值
+	forwardValue(std::move(aa));	//r
+	//下面是rValue, forward其实就是static_cast<T&&>(aa),T是int，结果就是int&&,右值引用
+	//如果是在模板内调用std::forward<T>(aa), 由于T&&是万能引用，T的类型和aa是一致的，所以可以完美转发
+	forwardValue(std::forward<int>(aa));	
+	//下面编译失败，std::forward的源码有规则，如果实参是右值引用的话，T不能是左值引用
+	//forwardValue(std::forward<int&>(std::move(aa)));
 
 	//-----------------------------------------------
 	//std::reference_wrapper
