@@ -287,8 +287,11 @@ vector<T>& Pair<T, vector<T> >::second()
 }
 
 //concept约束*****************************************//
+
 template<typename T>
+//以下两种都可以
 concept Integral = std::is_integral_v<T>;
+//concept Integral = std::is_integral<T>::value;
 
 template<Integral T>
 class Test
