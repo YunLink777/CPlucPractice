@@ -10,6 +10,7 @@
  * 3、模板类的友元函数和友元类（两种声明方式区别）
  * 4、模板类的全特化、半特化、半特化为另一个模板类
  * 5、deduced guides 推断指导规则
+ * 6、concept
  */
 
 #include <iostream>
@@ -285,6 +286,17 @@ vector<T>& Pair<T, vector<T> >::second()
 	return second_;
 }
 
+//concept约束*****************************************//
+template<typename T>
+concept Integral = std::is_integral_v<T>;
+
+template<Integral T>
+class Test
+{
+private:
+	T value_;
+};
+
 int main()
 {
 	//模板类*****************************************//
@@ -329,6 +341,13 @@ int main()
 	{
 		cout << a << endl;
 	}
+	cout << "****************************" << endl;
+
+	//concept已经约束了T必须是整数型的，double会无法通过编译
+	//Test<double> test;
+	Test<int> test;
+	Test<long> test;
+	
 
 	system("pause");
 	return 0;
