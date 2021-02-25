@@ -6,11 +6,10 @@
  *
  * \brief 模板类相关demo
  *  \content:
- * 1、模板类基础；2、显式、隐式实例化、成员函数实例化时机；3、concept和static_assert
- * 4、模板类的友元函数和友元类（两种声明方式区别）
- * 5、模板类的全特化、半特化、半特化为另一个模板类
- * 6、默认模板参数；7、using、typedef、typename别名
- * 7、deduced guides 推断指导规则
+ * 1、模板类基础；2、显式、隐式实例化、成员函数实例化时机
+ * 3、模板类的友元函数和友元类（两种声明方式区别）
+ * 4、模板类的全特化、半特化、半特化为另一个模板类
+ * 5、deduced guides 推断指导规则
  */
 
 #include <iostream>
@@ -32,6 +31,7 @@ public:
 	void Test()
 	{
 		Pair<int, int> p;
+		//访问Pair<int,int>的private成员变量, 如果实例化Test,会编译错误
 		int a = p.first_;
 	}
 };
@@ -154,6 +154,137 @@ ostream& operator<< (ostream& os, const Pair<T, U>& pair)
 //此处会编译错误，因为友元模板类是一一对应的
 //template class A<string, int>;
 
+//类型推到指引,将Pair(const char*, double)推到为 Pair<string, int>类型
+Pair(const char*, double) -> Pair<string, int>;
+
+//模板类特化、半特化*****************************************//
+//全特化
+template<>
+class Pair<double, double>
+{
+private:
+	double first_;
+	double second_;
+
+public:
+	Pair() = default;
+	Pair(const Pair & pair);
+	Pair(double first, double second);
+
+	double& first();
+	double& second();
+	void set_first(double first);
+	void set_second(double second);
+
+	void operator= (const Pair & pair);
+
+	template<typename V, typename W>
+	friend ostream& operator<< (ostream & os, const Pair<V, W>&pair);
+
+	friend class A<double, double>;
+};
+
+Pair<double, double>::Pair(const Pair<double, double>& pair)
+{
+	first_ = pair.second_;
+	second_ = pair.first_;
+}
+
+Pair<double, double>::Pair(double first, double second)
+{
+	first_ = first;
+	second_ = second;
+}
+
+//其他成员函数暂不特化
+
+//半特化, 也可以半特化为T* 或T&类型
+template<typename T>
+class Pair<T, string>
+{
+private:
+	T first_;
+	string second_;
+
+public:
+	Pair() = default;
+	Pair(const Pair& pair);
+	Pair(T first, string second);
+
+	T& first();
+	string& second();
+	void set_first(T first);
+	void set_second(string second);
+
+	void operator= (const Pair& pair);
+
+	template<typename V, typename W>
+	friend ostream& operator<< (ostream& os, const Pair<V, W>& pair);
+
+	friend class A<T, string>;
+};
+
+template<typename T>
+Pair<T, string>::Pair(const Pair<T, string>& pair)
+{
+	first_ = pair.first_ + 1;
+	second_ = pair.second_ + " second";
+}
+
+template<typename T>
+Pair<T, string>::Pair(T first, string second)
+{
+	first_ = first;
+	second_ = second;
+}
+
+//半特化为另一个模板类
+template<typename T>
+class Pair<T, vector<T>>
+{
+private:
+	T first_;
+	vector<T> second_;
+
+public:
+	Pair() = default;
+	Pair(const Pair& pair);
+	Pair(T first, vector<T> second);
+
+	T& first();
+	vector<T>& second();
+	void set_first(T first);
+	void set_second(vector<T> second);
+
+	void operator= (const Pair& pair);
+
+	template<typename V, typename W>
+	friend ostream& operator<< (ostream& os, const Pair<V, W>& pair);
+
+	friend class A<T, string>;
+};
+
+template<typename T>
+Pair<T, vector<T>>::Pair(const Pair<T, vector<T> >& pair)
+{
+	first_ = pair.first_ + 1;
+	second_ = pair.second_;
+	second_.push_back(first_);
+}
+
+template<typename T>
+Pair<T, vector<T>>::Pair(T first, vector<T> second)
+{
+	first_ = first;
+	second_ = second;
+}
+
+template<typename T>
+vector<T>& Pair<T, vector<T> >::second()
+{
+	return second_;
+}
+
 int main()
 {
 	//模板类*****************************************//
@@ -174,7 +305,31 @@ int main()
 	//实例化后, 发现A<string, int>无法访问Pair<int,int>的private成员,因为是一对一绑定的模板友元类
 	//a.Test();
 
+	//类型推到指引,将Pair(const char*, double)推到为 Pair<string, int>类型, 输出是int类型
+	Pair pair4("test", 1.111);
+	cout << pair4 << endl;
+
 	cout << "****************************" << endl;
+
+	//特化的Pair<double, double>类型
+	Pair<double, double> pair5(1.11, 2.22);
+	Pair<double, double> pair6 = pair5;
+	cout << pair5 << pair6 << endl;
+
+	//半特化的Pair<T, string>类型
+	Pair<double, string> pair7(1.11, "double");
+	Pair<double, string> pair8 = pair7;
+	cout << pair7 << pair8 << endl;
+
+	//半特化的Pair<T, vector<T> >类型
+	Pair<double, vector<double> > pair9(1.11, {2.2, 3.3});
+	Pair<double, vector<double> > pair10 = pair9;
+	vector<double> second = pair10.second();
+	for (auto a : second)
+	{
+		cout << a << endl;
+	}
+
 	system("pause");
 	return 0;
 }
