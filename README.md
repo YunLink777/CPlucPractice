@@ -41,3 +41,6 @@ const  volatile  auto  decltype  强制类型转换
 
 ### 模板函数TemplateFunction
 显式实例化，隐式实例化，显式实参调用，隐式实参调用，模板函数特化、重载，利用concept半特化，多类型返回类型确认，默认模板参数
+
+### 可变参模板
+可变参模板，折叠表达式，可变长using
