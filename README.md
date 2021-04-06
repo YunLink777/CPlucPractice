@@ -44,3 +44,7 @@ const  volatile  auto  decltype  强制类型转换
 
 ### 可变参模板
 可变参模板，折叠表达式，可变长using
+
+## 并发多线程
+### 多线程基础
+thread_local
