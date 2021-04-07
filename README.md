@@ -47,4 +47,4 @@ const  volatile  auto  decltype  强制类型转换
 
 ## 并发多线程
 ### 多线程基础
-thread_local
+thread_local，thread/jthread，mutex/lock
